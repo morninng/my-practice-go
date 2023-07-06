@@ -3,8 +3,8 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"go-rest-api/mock"
 	"go-rest-api/model"
+	"go-rest-api/usecase_mock"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -24,7 +24,7 @@ func TestCreateTask(t *testing.T) {
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
-	mockTaskUsecase := mock.NewMockITaskUsecase(mockCtrl)
+	mockTaskUsecase := usecase_mock.NewMockITaskUsecase(mockCtrl)
 	// テスト中に呼び出されるメソッドの振る舞いを定義
 	mockTaskUsecase.
 		EXPECT().
@@ -61,7 +61,7 @@ func TestCreateWrongTaskFail(t *testing.T) {
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
-	mockTaskUsecase := mock.NewMockITaskUsecase(mockCtrl)
+	mockTaskUsecase := usecase_mock.NewMockITaskUsecase(mockCtrl)
 
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(taskJSON))

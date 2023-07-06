@@ -2,7 +2,7 @@
 // Source: task-usecase.go
 
 // Package mock_usecase is a generated GoMock package.
-package mock
+package usecase_mock
 
 import (
 	model "go-rest-api/model"
