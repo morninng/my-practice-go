@@ -54,7 +54,10 @@ func (tc *taskController) CreateTask(c echo.Context) error {
 	if err := c.Bind(&task); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
+	fmt.Println("task", task)
 	taskRes, err := tc.tu.CreateTask(task)
+	fmt.Println("taskResponse", taskRes)
+	fmt.Printf("taskResponse %T \n", taskRes)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
