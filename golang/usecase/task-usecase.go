@@ -24,8 +24,9 @@ func NewTaskUsecase(tr repository.ITaskRepository, tv validator.ITaskValidator) 
 }
 
 func (tu *taskUsecase) GetAllTasks() ([]model.TaskResponse, error) {
-	tasks := []model.Task{}
-	if err := tu.tr.GetAllTasks(&tasks); err != nil {
+	// tasks := []model.Task{}
+	tasks, err := tu.tr.GetAllTasks()
+	if err != nil {
 		return nil, err
 	}
 	resTasks := []model.TaskResponse{}
