@@ -1,17 +1,12 @@
 package model
 
-import "time"
-
-type Task struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
-	Title     string    `json:"title" gorm:"not null"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
+import (
+	"github.com/volatiletech/null/v8"
+)
 
 type TaskResponse struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
+	ID        int64     `json:"id" gorm:"primaryKey"`
 	Title     string    `json:"title" gorm:"not null"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt null.Time `json:"created_at"`
+	UpdatedAt null.Time `json:"updated_at"`
 }

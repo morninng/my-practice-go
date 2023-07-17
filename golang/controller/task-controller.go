@@ -2,7 +2,7 @@ package controller
 
 import (
 	"fmt"
-	"go-rest-api/model"
+	"go-rest-api/models"
 	"go-rest-api/usecase"
 	"net/http"
 	"strconv"
@@ -29,18 +29,19 @@ func NewTaskController(tu usecase.ITaskUsecase) ITaskController {
 func (tc *taskController) GetAllTasks(c echo.Context) error {
 	fmt.Println("--------------------")
 
-	tasksRes, err := tc.tu.GetAllTasks()
+	sss, err := tc.tu.GetAllTasks()
+	fmt.Println(sss)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, tasksRes)
+	return c.JSON(http.StatusOK, sss)
 }
 
 func (tc *taskController) GetTaskById(c echo.Context) error {
 
 	id := c.Param("taskId")
 	taskId, _ := strconv.Atoi(id)
-	taskRes, err := tc.tu.GetTaskById(uint(taskId))
+	taskRes, err := tc.tu.GetTaskById(int64(taskId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -50,7 +51,7 @@ func (tc *taskController) GetTaskById(c echo.Context) error {
 func (tc *taskController) CreateTask(c echo.Context) error {
 	fmt.Println("CreateTask")
 
-	task := model.Task{}
+	task := models.Task{}
 	if err := c.Bind(&task); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -69,11 +70,11 @@ func (tc *taskController) UpdateTask(c echo.Context) error {
 	id := c.Param("taskId")
 	taskId, _ := strconv.Atoi(id)
 
-	task := model.Task{}
+	task := models.Task{}
 	if err := c.Bind(&task); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	taskRes, err := tc.tu.UpdateTask(task, uint(taskId))
+	taskRes, err := tc.tu.UpdateTask(task, int64(taskId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -85,7 +86,7 @@ func (tc *taskController) DeleteTask(c echo.Context) error {
 	id := c.Param("taskId")
 	taskId, _ := strconv.Atoi(id)
 
-	err := tc.tu.DeleteTask(uint(taskId))
+	err := tc.tu.DeleteTask(int64(taskId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
