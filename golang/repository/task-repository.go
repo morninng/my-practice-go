@@ -29,6 +29,7 @@ func (tr *taskRepository) GetAllTasks() ([]models.Task, error) {
 
 	ctx := context.Background()
 	tasks, err := models.Tasks().All(ctx, tr.db)
+	fmt.Println("!!!!tasks", tasks)
 	if err != nil {
 		return nil, err
 	}
@@ -36,9 +37,10 @@ func (tr *taskRepository) GetAllTasks() ([]models.Task, error) {
 	aaa := []models.Task{}
 
 	for _, v := range tasks {
+		fmt.Println("v vvvvvvvvvvvvvvvvvvvvvv", *v)
 		aaa = append(aaa, *v)
-
 	}
+	fmt.Println("!!!!aaa", aaa)
 	return aaa, nil
 }
 

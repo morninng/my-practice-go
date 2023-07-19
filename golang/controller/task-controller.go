@@ -29,12 +29,11 @@ func NewTaskController(tu usecase.ITaskUsecase) ITaskController {
 func (tc *taskController) GetAllTasks(c echo.Context) error {
 	fmt.Println("--------------------")
 
-	sss, err := tc.tu.GetAllTasks()
-	fmt.Println(sss)
+	tasksRes, err := tc.tu.GetAllTasks()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, sss)
+	return c.JSON(http.StatusOK, tasksRes)
 }
 
 func (tc *taskController) GetTaskById(c echo.Context) error {
