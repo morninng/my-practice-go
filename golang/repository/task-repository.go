@@ -1,71 +1,90 @@
 package repository
 
 import (
+	"context"
+	"database/sql"
 	"fmt"
-	"go-rest-api/model"
+	"go-rest-api/models"
 
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
 type ITaskRepository interface {
-	GetAllTasks() ([]model.Task, error)
-	GetTaskById(task *model.Task, taskId uint) error
-	CreateTask(task *model.Task) error
-	UpdateTask(task *model.Task, taskId uint) error
-	DeleteTask(taskId uint) error
+	GetAllTasks() ([]models.Task, error)
+	GetTaskById(id int64) (*models.Task, error)
+	CreateTask(task *models.Task) error
+	UpdateTask(task *models.Task, id int64) error
+	DeleteTask(id int64) error
 }
 
 type taskRepository struct {
-	db *gorm.DB
+	db *sql.DB
 }
 
-func NewTaskRepository(db *gorm.DB) ITaskRepository {
+func NewTaskRepository(db *sql.DB) ITaskRepository {
 	return &taskRepository{db}
 }
 
-func (tr *taskRepository) GetAllTasks() ([]model.Task, error) {
+func (tr *taskRepository) GetAllTasks() ([]models.Task, error) {
 
-	tasks := []model.Task{}
-
-	if err := tr.db.Order("created_at").Find(&tasks).Error; err != nil {
-		return tasks, err
+	ctx := context.Background()
+	tasks, err := models.Tasks().All(ctx, tr.db)
+	fmt.Println("!!!!tasks", tasks)
+	if err != nil {
+		return nil, err
 	}
-	return tasks, nil
+
+	aaa := []models.Task{}
+
+	for _, v := range tasks {
+		fmt.Println("v vvvvvvvvvvvvvvvvvvvvvv", *v)
+		aaa = append(aaa, *v)
+	}
+	fmt.Println("!!!!aaa", aaa)
+	return aaa, nil
 }
 
-func (tr *taskRepository) GetTaskById(task *model.Task, taskId uint) error {
-	if err := tr.db.First(task, taskId).Error; err != nil {
+func (tr *taskRepository) GetTaskById(id int64) (*models.Task, error) {
+	ctx := context.Background()
+	var err error
+	task, err := models.Tasks(models.TaskWhere.ID.EQ(id)).One(ctx, tr.db)
+
+	return task, err
+}
+
+func (tr *taskRepository) CreateTask(task *models.Task) error {
+	ctx := context.Background()
+	return task.Insert(ctx, tr.db, boil.Infer())
+
+}
+
+func (tr *taskRepository) UpdateTask(task *models.Task, id int64) error {
+
+	ctx := context.Background()
+	originalTask, err := models.FindTask(ctx, tr.db, id)
+	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func (tr *taskRepository) CreateTask(task *model.Task) error {
-	if err := tr.db.Create(task).Error; err != nil {
+	originalTask.Title = task.Title
+	rowAff, err := originalTask.Update(ctx, tr.db, boil.Infer())
+	if err != nil {
 		return err
 	}
+	fmt.Println("rowAff", rowAff)
 	return nil
 }
 
-func (tr *taskRepository) UpdateTask(task *model.Task, taskId uint) error {
-	result := tr.db.Model(task).Clauses(clause.Returning{}).Where("id=?", taskId).Update("title", task.Title)
-	if result.Error != nil {
-		return result.Error
-	}
-	if result.RowsAffected < 1 {
-		return fmt.Errorf("object does not exist")
-	}
-	return nil
-}
+func (tr *taskRepository) DeleteTask(id int64) error {
 
-func (tr *taskRepository) DeleteTask(taskId uint) error {
-	result := tr.db.Where("id=?", taskId).Delete(&model.Task{})
-	if result.Error != nil {
-		return result.Error
+	ctx := context.Background()
+	originalTask, err := models.FindTask(ctx, tr.db, id)
+	if err != nil {
+		return err
 	}
-	if result.RowsAffected < 1 {
-		return fmt.Errorf("object does not exist")
+	rowAff, err := originalTask.Delete(ctx, tr.db)
+	if err != nil {
+		return err
 	}
+	fmt.Println("rowAff", rowAff)
 	return nil
 }

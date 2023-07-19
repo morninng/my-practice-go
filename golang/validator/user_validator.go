@@ -1,14 +1,14 @@
 package validator
 
 import (
-	"go-rest-api/model"
+	"go-rest-api/models"
 
 	"github.com/go-ozzo/ozzo-validation/is"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 type IUserValidator interface {
-	UserValidate(user model.User) error
+	UserValidate(user models.User) error
 }
 
 type userValidator struct{}
@@ -17,7 +17,7 @@ func NewUserValidator() IUserValidator {
 	return &userValidator{}
 }
 
-func (uv *userValidator) UserValidate(user model.User) error {
+func (uv *userValidator) UserValidate(user models.User) error {
 	return validation.ValidateStruct(&user,
 		validation.Field(
 			&user.Email,

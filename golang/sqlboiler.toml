@@ -1,0 +1,10 @@
+[psql]
+  dbname = "udemy"
+  host   = "localhost"
+  port   = 5434
+  user   = "udemy"
+  pass   = "udemy"
+  sslmode = "disable"
+  schema = "public"
+  blacklist = []
+  

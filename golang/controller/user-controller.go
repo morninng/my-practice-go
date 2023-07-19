@@ -2,7 +2,7 @@ package controller
 
 import (
 	"fmt"
-	"go-rest-api/model"
+	"go-rest-api/models"
 	"go-rest-api/usecase"
 	"net/http"
 	"os"
@@ -27,7 +27,7 @@ func NewUserController(uu usecase.IUserUsecase) IUserController {
 
 func (uc *userController) SignUp(c echo.Context) error {
 	fmt.Println("SignUp")
-	user := model.User{}
+	user := models.User{}
 	if err := c.Bind(&user); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -40,7 +40,7 @@ func (uc *userController) SignUp(c echo.Context) error {
 
 func (uc *userController) LogIn(c echo.Context) error {
 	fmt.Println("LogIn")
-	user := model.User{}
+	user := models.User{}
 	if err := c.Bind(&user); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}

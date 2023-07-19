@@ -1,34 +1,44 @@
 package repository
 
 import (
-	"go-rest-api/model"
+	"context"
+	"database/sql"
+	"go-rest-api/models"
 
-	"gorm.io/gorm"
+	"github.com/volatiletech/null/v8"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
 type IUserRepository interface {
-	GetUserByEmail(user *model.User, email string) error
-	CreateUser(user *model.User) error
+	GetUserByEmail(user *models.User, email string) error
+	CreateUser(user *models.User) error
 }
 
 type userRepository struct {
-	db *gorm.DB
+	db *sql.DB
 }
 
-func NewUserRepository(db *gorm.DB) IUserRepository {
+func NewUserRepository(db *sql.DB) IUserRepository {
 	return &userRepository{db}
 }
 
-func (ur *userRepository) GetUserByEmail(user *model.User, email string) error {
-	if err := ur.db.Where("email=?", email).First(user).Error; err != nil {
-		return err
-	}
-	return nil
+func (ur *userRepository) GetUserByEmail(user *models.User, email string) error {
+
+	sss := null.StringFrom(email)
+	ctx := context.Background()
+	var err error
+	foundUser, err := models.Users(models.UserWhere.Email.EQ(sss)).One(ctx, ur.db)
+	user.ID = foundUser.ID
+	user.Email = foundUser.Email
+	user.Password = foundUser.Password
+	user.CreatedAt = foundUser.CreatedAt
+	user.UpdatedAt = foundUser.UpdatedAt
+
+	return err
 }
 
-func (ur *userRepository) CreateUser(user *model.User) error {
-	if err := ur.db.Create(user).Error; err != nil {
-		return err
-	}
-	return nil
+func (ur *userRepository) CreateUser(user *models.User) error {
+	ctx := context.Background()
+	return user.Insert(ctx, ur.db, boil.Infer())
+
 }
