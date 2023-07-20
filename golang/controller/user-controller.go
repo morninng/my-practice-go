@@ -17,15 +17,15 @@ type IUserController interface {
 	LogOut(c echo.Context) error
 }
 
-type userController struct {
+type UserController struct {
 	uu usecase.IUserUsecase
 }
 
 func NewUserController(uu usecase.IUserUsecase) IUserController {
-	return &userController{uu}
+	return &UserController{uu}
 }
 
-func (uc *userController) SignUp(c echo.Context) error {
+func (uc *UserController) SignUp(c echo.Context) error {
 	fmt.Println("SignUp")
 	user := models.User{}
 	if err := c.Bind(&user); err != nil {
@@ -38,7 +38,7 @@ func (uc *userController) SignUp(c echo.Context) error {
 	return c.JSON(http.StatusCreated, userRes)
 }
 
-func (uc *userController) LogIn(c echo.Context) error {
+func (uc *UserController) LogIn(c echo.Context) error {
 	fmt.Println("LogIn")
 	user := models.User{}
 	if err := c.Bind(&user); err != nil {
@@ -61,7 +61,7 @@ func (uc *userController) LogIn(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-func (uc *userController) LogOut(c echo.Context) error {
+func (uc *UserController) LogOut(c echo.Context) error {
 	cookie := new(http.Cookie)
 	cookie.Name = "token"
 	cookie.Value = ""
@@ -75,7 +75,7 @@ func (uc *userController) LogOut(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-func (uc *userController) CsrfToken(c echo.Context) error {
+func (uc *UserController) CsrfToken(c echo.Context) error {
 	token := c.Get("csrf").(string)
 	return c.JSON(http.StatusOK, echo.Map{
 		"csrf_token": token,

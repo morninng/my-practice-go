@@ -18,15 +18,15 @@ type ITaskController interface {
 	DeleteTask(c echo.Context) error
 }
 
-type taskController struct {
+type TaskController struct {
 	tu usecase.ITaskUsecase
 }
 
 func NewTaskController(tu usecase.ITaskUsecase) ITaskController {
-	return &taskController{tu}
+	return &TaskController{tu}
 }
 
-func (tc *taskController) GetAllTasks(c echo.Context) error {
+func (tc *TaskController) GetAllTasks(c echo.Context) error {
 	fmt.Println("--------------------")
 
 	tasksRes, err := tc.tu.GetAllTasks()
@@ -36,7 +36,7 @@ func (tc *taskController) GetAllTasks(c echo.Context) error {
 	return c.JSON(http.StatusOK, tasksRes)
 }
 
-func (tc *taskController) GetTaskById(c echo.Context) error {
+func (tc *TaskController) GetTaskById(c echo.Context) error {
 
 	id := c.Param("taskId")
 	taskId, _ := strconv.Atoi(id)
@@ -47,7 +47,7 @@ func (tc *taskController) GetTaskById(c echo.Context) error {
 	return c.JSON(http.StatusOK, taskRes)
 }
 
-func (tc *taskController) CreateTask(c echo.Context) error {
+func (tc *TaskController) CreateTask(c echo.Context) error {
 	fmt.Println("CreateTask")
 
 	task := models.Task{}
@@ -64,7 +64,7 @@ func (tc *taskController) CreateTask(c echo.Context) error {
 	return c.JSON(http.StatusCreated, taskRes)
 }
 
-func (tc *taskController) UpdateTask(c echo.Context) error {
+func (tc *TaskController) UpdateTask(c echo.Context) error {
 
 	id := c.Param("taskId")
 	taskId, _ := strconv.Atoi(id)
@@ -80,7 +80,7 @@ func (tc *taskController) UpdateTask(c echo.Context) error {
 	return c.JSON(http.StatusOK, taskRes)
 }
 
-func (tc *taskController) DeleteTask(c echo.Context) error {
+func (tc *TaskController) DeleteTask(c echo.Context) error {
 
 	id := c.Param("taskId")
 	taskId, _ := strconv.Atoi(id)
