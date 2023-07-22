@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
+	"go-rest-api/logger"
 	"go-rest-api/router"
 )
 
 func main() {
+	logger.Info("Starting the application...")
+
 	fmt.Println("my practice go")
 
 	// db := db.NewDB()
