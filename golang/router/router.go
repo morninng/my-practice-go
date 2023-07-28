@@ -21,6 +21,7 @@ func NewRouter(uc controller.IUserController, tc controller.ITaskController) *ec
 		AllowCredentials: true,
 	}))
 
+	e.GET("/test", uc.Test)
 	e.POST("/signup", uc.SignUp)
 	e.POST("/login", uc.LogIn)
 	e.POST("/logout", uc.LogOut)

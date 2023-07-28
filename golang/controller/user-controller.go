@@ -15,6 +15,7 @@ type IUserController interface {
 	SignUp(c echo.Context) error
 	LogIn(c echo.Context) error
 	LogOut(c echo.Context) error
+	Test(c echo.Context) error
 }
 
 type UserController struct {
@@ -23,6 +24,12 @@ type UserController struct {
 
 func NewUserController(uu usecase.IUserUsecase) IUserController {
 	return &UserController{uu}
+}
+
+func (uc *UserController) Test(c echo.Context) error {
+	fmt.Println("test")
+
+	return c.JSON(http.StatusAccepted, "abcd")
 }
 
 func (uc *UserController) SignUp(c echo.Context) error {
